@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* dark theme (default) */
+    --bg: #12181a;
+    --panel: #1a2224;
+    --ink: #e8ece9;
+    --ink-soft: #94a29d;
+    --line: #2b3538;
+    --accent: #4fb69a;
+    --accent-soft: rgba(79, 182, 154, 0.14);
+    --amber: #e2ab54;
+    --amber-soft: rgba(226, 171, 84, 0.14);
+    --radius: 10px;
+  }
+
+  html.light {
+    --bg: #f4f5f2;
+    --panel: #ffffff;
+    --ink: #1b2430;
+    --ink-soft: #5b6472;
+    --line: #dde1db;
+    --accent: #2f6f5e;
+    --accent-soft: #e6f0ec;
+    --amber: #b8791f;
+    --amber-soft: #f7ecd9;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1.5;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 64px 24px 100px;
+  }
+
+  header {
+    margin-bottom: 48px;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    margin: 0 0 10px;
+  }
+
+  h1 {
+    font-size: clamp(32px, 5vw, 46px);
+    font-weight: 700;
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .decl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    color: var(--ink-soft);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    display: inline-block;
+  }
+  .decl .kw { color: #a6416b; }
+  .decl .fn { color: var(--accent); }
+  .decl .br { color: var(--ink-soft); }
+
+  /* top-level group: Basic / Intermediate / Advanced */
+  section.group {
+    margin-bottom: 52px;
+  }
+
+  .group-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
+    margin: 0 0 6px;
+  }
+
+  /* topic sub-group: Vector / Linked List / etc */
+  .topic {
+    padding: 18px 0 4px 22px;
+    border-left: 2px solid var(--line);
+    margin-left: 4px;
+  }
+
+  .topic-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+
+  ul.entries {
+    list-style: none;
+    margin: 0 0 6px;
+    padding: 0;
+  }
+
+  li.entry {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .topic ul.entries li.entry:last-child { border-bottom: none; }
+
+  .name a {
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    border-bottom: 1px solid transparent;
+  }
+  .name a:hover {
+    border-bottom-color: var(--ink);
+  }
+  .name.empty {
+    color: var(--ink-soft);
+    font-weight: 400;
+    font-style: italic;
+  }
+  .name .tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 6px;
+    padding: 4px 9px;
+    margin-right: 10px;
+  }
+
+  .status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .status.soon {
+    background: var(--amber-soft);
+    color: var(--amber);
+  }
+  .status.ready {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  footer {
+    margin-top: 60px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  footer a:hover {
+    border-bottom-color: var(--accent);
+  }
+
+  @media (max-width: 560px) {
+    li.entry {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+    }
+    .status { justify-self: start; }
+  }
+
+  .theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 7px 14px 7px 12px;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .theme-toggle:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+  .theme-toggle .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  @media (max-width: 560px) {
+    .theme-toggle {
+      top: 14px;
+      right: 14px;
+      padding: 6px 12px 6px 10px;
+      font-size: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode">
+  <span class="dot"></span>
+  <span id="themeLabel">dark</span>
+</button>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">// personal index</p>
+    <h1>DSA Reference Manual</h1>
+    <p class="decl"><span class="kw">const</span> <span class="fn">dsaRef</span> <span class="br">=</span> [ ...topics ]<span class="br">;</span></p>
+  </header>
+
+  <!--
+    HOW TO EDIT AN ENTRY:
+    - Replace "Coming soon" text inside <a href="#"> with your file title (optional).
+    - Set href="#" to your published artifact link.
+    - Change the status span from "soon" to "ready" (both the class and the label)
+      so the badge turns from amber "soon" to green "ready".
+
+    Example, filled in:
+      <li class="entry">
+        <span class="name"><span class="tag">Reference</span><a href="https://claude.ai/public/artifacts/XXXX">Stack & Queue Reference v2</a></span>
+        <span class="status ready">ready</span>
+      </li>
+
+    STRUCTURE NOTE:
+    - Each topic (e.g. Vector) has two rows underneath it: Reference and Questions.
+    - To add a new topic, copy a whole <div class="topic">...</div> block.
+    - When we later add a "Concepts" section, it can become its own top-level
+      <section class="group"> the same way Basic / Intermediate / Advanced are now.
+  -->
+
+  <section class="group">
+    <p class="group-title">Basic Structures</p>
+
+    <div class="topic">
+      <p class="topic-title">Vector</p>
+      <ul class="entries">
+        <li class="entry">
+          <span class="name empty"><span class="tag">Reference</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+        <li class="entry">
+          <span class="name empty"><span class="tag">Questions</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="topic">
+      <p class="topic-title">Linked List</p>
+      <ul class="entries">
+        <li class="entry">
+          <span class="name empty"><span class="tag">Reference</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+        <li class="entry">
+          <span class="name empty"><span class="tag">Questions</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="topic">
+      <p class="topic-title">Stack &amp; Queue</p>
+      <ul class="entries">
+        <li class="entry">
+          <span class="name"><span class="tag">Reference</span><a href="https://claude.ai/public/artifacts/7f85b812-c1b4-4601-a2bd-79ebebf11657">DSA_STACK_QUEUE_REFERENCE_v2.md</a></span>
+          <span class="status ready">ready</span>
+        </li>
+        <li class="entry">
+          <span class="name empty"><span class="tag">Questions</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="group">
+    <p class="group-title">Intermediate Structures</p>
+
+    <div class="topic">
+      <p class="topic-title">Binary Tree</p>
+      <ul class="entries">
+        <li class="entry">
+          <span class="name empty"><span class="tag">Reference</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+        <li class="entry">
+          <span class="name empty"><span class="tag">Questions</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="topic">
+      <p class="topic-title">BST</p>
+      <ul class="entries">
+        <li class="entry">
+          <span class="name empty"><span class="tag">Reference</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+        <li class="entry">
+          <span class="name empty"><span class="tag">Questions</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="topic">
+      <p class="topic-title">Min/Max Heap</p>
+      <ul class="entries">
+        <li class="entry">
+          <span class="name empty"><span class="tag">Reference</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+        <li class="entry">
+          <span class="name empty"><span class="tag">Questions</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="topic">
+      <p class="topic-title">Hash Table</p>
+      <ul class="entries">
+        <li class="entry">
+          <span class="name empty"><span class="tag">Reference</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+        <li class="entry">
+          <span class="name empty"><span class="tag">Questions</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="group">
+    <p class="group-title">Advanced Structures</p>
+
+    <div class="topic">
+      <p class="topic-title">Graph</p>
+      <ul class="entries">
+        <li class="entry">
+          <span class="name empty"><span class="tag">Reference</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+        <li class="entry">
+          <span class="name empty"><span class="tag">Questions</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="topic">
+      <p class="topic-title">Trie</p>
+      <ul class="entries">
+        <li class="entry">
+          <span class="name empty"><span class="tag">Reference</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+        <li class="entry">
+          <span class="name empty"><span class="tag">Questions</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="topic">
+      <p class="topic-title">Union-Find</p>
+      <ul class="entries">
+        <li class="entry">
+          <span class="name empty"><span class="tag">Reference</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+        <li class="entry">
+          <span class="name empty"><span class="tag">Questions</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="topic">
+      <p class="topic-title">Segment Tree</p>
+      <ul class="entries">
+        <li class="entry">
+          <span class="name empty"><span class="tag">Reference</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+        <li class="entry">
+          <span class="name empty"><span class="tag">Questions</span><a href="#">Coming soon</a></span>
+          <span class="status soon">soon</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    source & files → <a href="https://github.com/harshk160/DSA">github.com/harshk160/DSA</a>
+  </footer>
+
+</div>
+
+<script>
+  var toggle = document.getElementById('themeToggle');
+  var label = document.getElementById('themeLabel');
+
+  toggle.addEventListener('click', function () {
+    var isLight = document.documentElement.classList.toggle('light');
+    label.textContent = isLight ? 'light' : 'dark';
+    toggle.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+  });
+</script>
+
+</body>
+</html>
